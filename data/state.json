@@ -1,0 +1,203 @@
+{
+  "last_processed_date": "Jul 2, 2026",
+  "groups": {
+    "143": {
+      "name": "Let Alberta Decide",
+      "registered_date": "Jun 17, 2026",
+      "event_id": 128,
+      "account_id": 9911,
+      "total_contributions": 207334.95,
+      "net_change": 0.0,
+      "last_update_date": "Jun 17, 2026"
+    },
+    "134": {
+      "name": "Pathway to Independence",
+      "registered_date": "Jun 2, 2026",
+      "event_id": 128,
+      "account_id": 9902,
+      "total_contributions": 82311.3,
+      "net_change": 0.0,
+      "last_update_date": "Jun 2, 2026"
+    },
+    "132": {
+      "name": "Alberta's Voice",
+      "registered_date": "May 25, 2026",
+      "event_id": 128,
+      "account_id": 9900,
+      "total_contributions": 26650.0,
+      "net_change": 0.0,
+      "last_update_date": "May 25, 2026"
+    },
+    "136": {
+      "name": "The Lavigne Show",
+      "registered_date": "Jun 2, 2026",
+      "event_id": 128,
+      "account_id": 9904,
+      "total_contributions": 19924.13,
+      "net_change": 0.0,
+      "last_update_date": "Jun 2, 2026"
+    },
+    "144": {
+      "name": "United Alberta Flags",
+      "registered_date": "Jun 19, 2026",
+      "event_id": 128,
+      "account_id": 9912,
+      "total_contributions": 17300.0,
+      "net_change": 0.0,
+      "last_update_date": "Jun 19, 2026"
+    },
+    "133": {
+      "name": "Alberta Land Consortium Inc.",
+      "registered_date": "Jun 2, 2026",
+      "event_id": 128,
+      "account_id": 9901,
+      "total_contributions": 14165.0,
+      "net_change": 0.0,
+      "last_update_date": "Jun 2, 2026"
+    },
+    "138": {
+      "name": "Alberta Women for Independence",
+      "registered_date": "Jun 2, 2026",
+      "event_id": 128,
+      "account_id": 9906,
+      "total_contributions": 11167.0,
+      "net_change": 0.0,
+      "last_update_date": "Jun 2, 2026"
+    },
+    "139": {
+      "name": "Vote to Stay",
+      "registered_date": "Jun 2, 2026",
+      "event_id": 128,
+      "account_id": 9907,
+      "total_contributions": 10246.29,
+      "net_change": 0.0,
+      "last_update_date": "Jun 2, 2026"
+    },
+    "135": {
+      "name": "Together - \"No!\" (Public Interest Alberta)",
+      "registered_date": "Jun 2, 2026",
+      "event_id": 128,
+      "account_id": 9903,
+      "total_contributions": 9890.0,
+      "net_change": 0.0,
+      "last_update_date": "Jun 2, 2026"
+    },
+    "131": {
+      "name": "Alberta Advantage Immigrant Support Society (Our Alberta Advantage)",
+      "registered_date": "May 4, 2026",
+      "event_id": 128,
+      "account_id": 9897,
+      "total_contributions": 9630.07,
+      "net_change": 0.0,
+      "last_update_date": "May 4, 2026"
+    },
+    "141": {
+      "name": "Alberta's Choice",
+      "registered_date": "Jun 5, 2026",
+      "event_id": 128,
+      "account_id": 9909,
+      "total_contributions": 9589.0,
+      "net_change": 0.0,
+      "last_update_date": "Jun 5, 2026"
+    },
+    "148": {
+      "name": "Albertans4Freedom Inc.",
+      "registered_date": "Jun 24, 2026",
+      "event_id": 128,
+      "account_id": 9916,
+      "total_contributions": 3900.0,
+      "net_change": 0.0,
+      "last_update_date": "Jun 24, 2026"
+    },
+    "142": {
+      "name": "Alberta Radio Show",
+      "registered_date": "Jun 8, 2026",
+      "event_id": 128,
+      "account_id": 9910,
+      "total_contributions": 223.76,
+      "net_change": 0.0,
+      "last_update_date": "Jun 8, 2026"
+    },
+    "137": {
+      "name": "Alberta Nation Corporation (DBA Alberta Nation Events)",
+      "registered_date": "Jun 2, 2026",
+      "event_id": 128,
+      "account_id": 9905,
+      "total_contributions": 200.0,
+      "net_change": 0.0,
+      "last_update_date": "Jun 2, 2026"
+    },
+    "147": {
+      "name": "North Alberta Strong",
+      "registered_date": "Jun 24, 2026",
+      "event_id": 128,
+      "account_id": 9915,
+      "total_contributions": 0.0,
+      "net_change": 0.0,
+      "last_update_date": "Jun 24, 2026"
+    },
+    "151": {
+      "name": "NoThanks.Vote",
+      "registered_date": "Jul 2, 2026",
+      "event_id": 128,
+      "account_id": 9919,
+      "total_contributions": 0.0,
+      "net_change": 0.0,
+      "last_update_date": "Jul 2, 2026"
+    },
+    "152": {
+      "name": "Alberta Liberty",
+      "registered_date": "Jul 2, 2026",
+      "event_id": 128,
+      "account_id": 9920,
+      "total_contributions": 0.0,
+      "net_change": 0.0,
+      "last_update_date": "Jul 2, 2026"
+    },
+    "140": {
+      "name": "Stay Free Alberta",
+      "registered_date": "Jun 5, 2026",
+      "event_id": 128,
+      "account_id": 9908,
+      "total_contributions": 0.0,
+      "net_change": 0.0,
+      "last_update_date": "Jun 5, 2026"
+    },
+    "149": {
+      "name": "United for Canada - UnitedFor.CA",
+      "registered_date": "Jun 26, 2026",
+      "event_id": 128,
+      "account_id": 9917,
+      "total_contributions": 0.0,
+      "net_change": 0.0,
+      "last_update_date": "Jun 26, 2026"
+    },
+    "150": {
+      "name": "Free Alberta From Overreach",
+      "registered_date": "Jun 26, 2026",
+      "event_id": 128,
+      "account_id": 9918,
+      "total_contributions": 0.0,
+      "net_change": 0.0,
+      "last_update_date": "Jun 26, 2026"
+    },
+    "145": {
+      "name": "Forever-Canadian Citizens Initiative Society",
+      "registered_date": "Jun 8, 2026",
+      "event_id": 128,
+      "account_id": 9913,
+      "total_contributions": 0.0,
+      "net_change": 0.0,
+      "last_update_date": "Jun 8, 2026"
+    },
+    "146": {
+      "name": "Alberta Forward",
+      "registered_date": "Jun 22, 2026",
+      "event_id": 128,
+      "account_id": 9914,
+      "total_contributions": 0.0,
+      "net_change": 0.0,
+      "last_update_date": "Jun 22, 2026"
+    }
+  }
+}

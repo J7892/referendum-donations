@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Interactive dashboard tracking campaign contributions and donations in Alberta's separation referendum. Search, filter, and analyze advertiser financials.">
+    <title>Alberta Referendum Donations Tracker Dashboard</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- PapaParse CDN for robust browser-side CSV parsing -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    
+    <!-- Premium Styles -->
+    <style>
+        :root {
+            --bg-main: #0b0f19;
+            --bg-card: rgba(22, 30, 46, 0.7);
+            --bg-card-hover: rgba(30, 41, 59, 0.8);
+            --border-color: rgba(36, 48, 73, 0.5);
+            --border-hover: rgba(59, 130, 246, 0.5);
+            
+            --text-primary: #f9fafb;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            
+            --accent-gold: #f59e0b;
+            --accent-gold-hover: #d97706;
+            --accent-green: #10b981;
+            --accent-blue: #3b82f6;
+            
+            --font-title: 'Outfit', -apple-system, sans-serif;
+            --font-body: 'Inter', -apple-system, sans-serif;
+            --shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Reset & Base Styles */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            font-family: var(--font-body);
+            line-height: 1.5;
+            overflow-x: hidden;
+            padding-bottom: 60px;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+
+        /* Glow effects background */
+        .glow-bg {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 1400px;
+            height: 450px;
+            background: radial-gradient(circle at top, rgba(59, 130, 246, 0.15) 0%, rgba(245, 158, 11, 0.05) 50%, rgba(11, 15, 25, 0) 100%);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* Container Layout */
+        .app-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        /* Header section */
+        header {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+
+        h1 {
+            font-family: var(--font-title);
+            font-size: 2.8rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #ffffff 30%, #94a3b8 70%, var(--accent-gold) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.025em;
+            margin-bottom: 12px;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Metrics grid */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .metric-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .metric-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--accent-blue);
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .metric-card.gold::before {
+            background: var(--accent-gold);
+        }
+
+        .metric-card.green::before {
+            background: var(--accent-green);
+        }
+
+        .metric-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--border-hover);
+            background: var(--bg-card-hover);
+        }
+
+        .metric-card:hover::before {
+            opacity: 1;
+        }
+
+        .metric-title {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .metric-value {
+            font-family: var(--font-title);
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .metric-sub {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 6px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .change-badge {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--accent-green);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 0.75rem;
+        }
+
+        /* Split Section Layout */
+        .dashboard-content {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 32px;
+        }
+
+        @media (min-width: 992px) {
+            .dashboard-content {
+                grid-template-columns: 380px 1fr;
+            }
+        }
+
+        /* Section Container Styles */
+        .section-box {
+            background: var(--bg-card);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 28px;
+            box-shadow: var(--shadow);
+        }
+
+        .section-header {
+            font-family: var(--font-title);
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 12px;
+        }
+
+        /* Groups List Column */
+        .groups-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .group-row {
+            padding: 16px;
+            border-radius: 12px;
+            background: rgba(15, 23, 42, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            transition: var(--transition);
+        }
+
+        .group-row:hover {
+            border-color: rgba(255, 255, 255, 0.1);
+            background: rgba(15, 23, 42, 0.6);
+        }
+
+        .group-name {
+            font-weight: 600;
+            font-size: 0.95rem;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .group-metrics {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 8px;
+        }
+
+        .group-total {
+            font-family: var(--font-title);
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--accent-gold);
+        }
+
+        .group-update {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .group-bar-container {
+            height: 6px;
+            background: #1e293b;
+            border-radius: 3px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .group-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #d97706, #fbbf24);
+            border-radius: 3px;
+            width: 0%;
+            transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Database Explorer Column */
+        .explorer-header {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-bottom: 24px;
+            align-items: center;
+        }
+
+        .search-wrapper {
+            position: relative;
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .search-input {
+            width: 100%;
+            background-color: #0f172a;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 12px 16px;
+            color: var(--text-primary);
+            font-family: var(--font-body);
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+        }
+
+        .select-filter {
+            background-color: #0f172a;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 12px 16px;
+            color: var(--text-primary);
+            font-family: var(--font-body);
+            font-size: 0.9rem;
+            min-width: 200px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .select-filter:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+        }
+
+        /* Table Design */
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+            margin-bottom: 20px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.88rem;
+            background: rgba(15, 23, 42, 0.2);
+        }
+
+        th {
+            background-color: rgba(15, 23, 42, 0.6);
+            color: var(--text-secondary);
+            font-weight: 600;
+            padding: 14px 16px;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.05em;
+            border-bottom: 1px solid var(--border-color);
+            cursor: pointer;
+            user-select: none;
+            position: relative;
+            transition: var(--transition);
+        }
+
+        th:hover {
+            color: var(--text-primary);
+            background-color: rgba(15, 23, 42, 0.8);
+        }
+
+        th.sort-asc::after {
+            content: ' ▲';
+            font-size: 0.65rem;
+            color: var(--accent-gold);
+        }
+
+        th.sort-desc::after {
+            content: ' ▼';
+            font-size: 0.65rem;
+            color: var(--accent-gold);
+        }
+
+        td {
+            padding: 14px 16px;
+            border-bottom: 1px solid rgba(36, 48, 73, 0.3);
+            color: #cbd5e1;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover td {
+            background-color: rgba(30, 41, 59, 0.3);
+            color: var(--text-primary);
+        }
+
+        .td-amount {
+            font-family: var(--font-title);
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .td-summary-row {
+            background-color: rgba(245, 158, 11, 0.05);
+            font-style: italic;
+        }
+        
+        .td-summary-row td {
+            color: #fbbf24;
+        }
+
+        .badge-date {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        /* Pagination & Info */
+        .explorer-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-top: 24px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .pagination-btn-group {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn {
+            background-color: #1e293b;
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .btn:hover:not(:disabled) {
+            background-color: var(--accent-blue);
+            border-color: var(--accent-blue);
+        }
+
+        .btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        /* Loading Spinner */
+        .loading-overlay {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 0;
+            color: var(--text-secondary);
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(59, 130, 246, 0.1);
+            border-top-color: var(--accent-blue);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 16px;
+        }
+
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 40px 0;
+            color: var(--text-muted);
+            font-style: italic;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="glow-bg"></div>
+    
+    <div class="app-container">
+        <!-- Dashboard Header -->
+        <header>
+            <h1 id="app-title">Separation Referendum Donations Tracker</h1>
+            <p class="subtitle" id="app-subtitle">Alberta Referendum Campaign Contribution Dashboard. Updated automatically weekly on Fridays.</p>
+        </header>
+
+        <!-- Metrics Overview Grid -->
+        <div class="metrics-grid" id="metrics-container">
+            <div class="metric-card gold">
+                <p class="metric-title">Grand Total Raised</p>
+                <div class="metric-value" id="stat-grand-total">$0.00</div>
+                <div class="metric-sub" id="stat-grand-total-sub">Total cumulative advertising period funding</div>
+            </div>
+            <div class="metric-card green">
+                <p class="metric-title">Weekly Net Change</p>
+                <div class="metric-value positive" id="stat-net-change">+$0.00</div>
+                <div class="metric-sub" id="stat-net-change-sub">Funds added in latest Friday update</div>
+            </div>
+            <div class="metric-card">
+                <p class="metric-title">Advertiser Groups</p>
+                <div class="metric-value" id="stat-group-count">0</div>
+                <div class="metric-sub" id="stat-group-count-sub">Registered referendum advertisers</div>
+            </div>
+            <div class="metric-card">
+                <p class="metric-title">Last Updated Date</p>
+                <div class="metric-value" id="stat-update-date">-</div>
+                <div class="metric-sub" id="stat-update-date-sub">Elections Alberta portal update</div>
+            </div>
+        </div>
+
+        <!-- Dashboard main body -->
+        <div class="dashboard-content">
+            <!-- Sidebar: Running totals by group -->
+            <aside class="section-box">
+                <h2 class="section-header">Advertiser Leaderboard</h2>
+                <div class="groups-list" id="groups-list-container">
+                    <div class="loading-overlay">
+                        <div class="spinner"></div>
+                        <p>Loading leaderboard...</p>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Main: Database Explorer table -->
+            <main class="section-box">
+                <h2 class="section-header">Disclosed Contributions Database</h2>
+                
+                <!-- Table Filters -->
+                <div class="explorer-header">
+                    <div class="search-wrapper">
+                        <input type="text" id="search-input" class="search-input" placeholder="Search contributor name, location, or recipient..." aria-label="Search contributions">
+                    </div>
+                    <select id="group-filter" class="select-filter" aria-label="Filter by advertiser">
+                        <option value="">All Advertisers</option>
+                    </select>
+                </div>
+
+                <!-- Database Table -->
+                <div class="table-responsive">
+                    <table id="donations-table">
+                        <thead>
+                            <tr>
+                                <th id="th-contributor" onclick="handleSort('contributor')">Contributor</th>
+                                <th id="th-location" onclick="handleSort('location')">Location</th>
+                                <th id="th-group" onclick="handleSort('group_name')">Recipient Group</th>
+                                <th id="th-amount" class="text-right" onclick="handleSort('total')">Amount</th>
+                                <th id="th-date" onclick="handleSort('report_date')">Date Logged</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-body">
+                            <!-- Populated dynamically -->
+                            <tr>
+                                <td colspan="5">
+                                    <div class="loading-overlay">
+                                        <div class="spinner"></div>
+                                        <p>Loading contributions database...</p>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Pagination Footer -->
+                <div class="explorer-footer">
+                    <div id="table-info">Showing 0 of 0 donations</div>
+                    <div class="pagination-btn-group">
+                        <button class="btn" id="btn-prev" onclick="changePage(-1)" disabled>Previous</button>
+                        <button class="btn" id="btn-next" onclick="changePage(1)" disabled>Next</button>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Client-side Logic Script -->
+    <script>
+        // Global App State
+        let appState = {
+            metadata: null,
+            donations: [],
+            filteredDonations: [],
+            pagination: {
+                page: 1,
+                perPage: 25,
+                totalPages: 1
+            },
+            sorting: {
+                column: 'total', // Sort by amount by default
+                ascending: false
+            }
+        };
+
+        // Initialize App
+        document.addEventListener('DOMContentLoaded', () => {
+            loadDashboardData();
+            
+            // Set up search and filter listeners
+            document.getElementById('search-input').addEventListener('input', applyFilters);
+            document.getElementById('group-filter').addEventListener('change', applyFilters);
+        });
+
+        async function loadDashboardData() {
+            try {
+                // 1. Fetch metadata json
+                const metaResponse = await fetch('data/state.json');
+                if (!metaResponse.ok) throw new Error("Could not load state metadata.");
+                appState.metadata = await metaResponse.json();
+                
+                // 2. Fetch CSV
+                const csvResponse = await fetch('data/referendum_donations.csv');
+                if (!csvResponse.ok) throw new Error("Could not load CSV database.");
+                const csvText = await csvResponse.text();
+                
+                // Parse CSV using PapaParse
+                Papa.parse(csvText, {
+                    header: true,
+                    skipEmptyLines: true,
+                    complete: function(results) {
+                        // Cast numeric columns
+                        appState.donations = results.data.map(row => {
+                            return {
+                                ...row,
+                                cash: parseFloat(row.cash) || 0,
+                                valued: parseFloat(row.valued) || 0,
+                                total: parseFloat(row.total) || 0
+                            };
+                        });
+                        
+                        buildDashboard();
+                    },
+                    error: function(err) {
+                        console.error("CSV parse error:", err);
+                        showError("Failed to parse database CSV.");
+                    }
+                });
+                
+            } catch (e) {
+                console.error("Dashboard init error:", e);
+                showError(e.message);
+            }
+        }
+
+        function buildDashboard() {
+            renderMetrics();
+            populateGroupFilter();
+            renderLeaderboard();
+            applyFilters(); // Renders the table
+        }
+
+        function renderMetrics() {
+            const meta = appState.metadata;
+            if (!meta) return;
+            
+            let grandTotal = 0;
+            let netChange = 0;
+            const groupsCount = Object.keys(meta.groups).length;
+            
+            Object.values(meta.groups).forEach(g => {
+                grandTotal += g.total_contributions;
+                netChange += g.net_change;
+            });
+            
+            document.getElementById('stat-grand-total').textContent = formatCurrency(grandTotal);
+            
+            const netValEl = document.getElementById('stat-net-change');
+            netValEl.textContent = (netChange >= 0 ? '+' : '') + formatCurrency(netChange);
+            if (netChange > 0) {
+                netValEl.className = "metric-value positive";
+                document.getElementById('stat-net-change-sub').innerHTML = `<span class="change-badge">NEW FUNDS</span> added in last run`;
+            } else {
+                netValEl.className = "metric-value";
+                netValEl.style.color = "var(--text-secondary)";
+                document.getElementById('stat-net-change-sub').textContent = "No change in latest update";
+            }
+            
+            document.getElementById('stat-group-count').textContent = groupsCount;
+            document.getElementById('stat-update-date').textContent = meta.last_processed_date || "N/A";
+        }
+
+        function populateGroupFilter() {
+            const meta = appState.metadata;
+            if (!meta) return;
+            
+            const select = document.getElementById('group-filter');
+            select.innerHTML = '<option value="">All Advertisers</option>'; // Reset
+            
+            // Sort by total contributions
+            const sortedGroups = Object.entries(meta.groups).sort((a, b) => b[1].total_contributions - a[1].total_contributions);
+            
+            sortedGroups.forEach(([id, g]) => {
+                const opt = document.createElement('option');
+                opt.value = id;
+                opt.textContent = g.name;
+                select.appendChild(opt);
+            });
+        }
+
+        function renderLeaderboard() {
+            const meta = appState.metadata;
+            if (!meta) return;
+            
+            const container = document.getElementById('groups-list-container');
+            container.innerHTML = '';
+            
+            let grandTotal = 0;
+            Object.values(meta.groups).forEach(g => grandTotal += g.total_contributions);
+            
+            // Sort groups by total
+            const sortedGroups = Object.entries(meta.groups).sort((a, b) => b[1].total_contributions - a[1].total_contributions);
+            
+            sortedGroups.forEach(([id, g]) => {
+                const pct = grandTotal > 0 ? (g.total_contributions / grandTotal) * 100 : 0;
+                const changeText = g.net_change > 0 ? ` (+${formatCurrency(g.net_change)})` : '';
+                
+                const groupRow = document.createElement('div');
+                groupRow.className = "group-row";
+                groupRow.innerHTML = `
+                    <div class="group-name" title="${g.name}">${g.name}</div>
+                    <div class="group-metrics">
+                        <div class="group-total">${formatCurrency(g.total_contributions)}<span style="font-size: 0.75rem; font-weight: normal; color: var(--accent-green)">${changeText}</span></div>
+                        <div class="group-update">Updated: ${g.last_update_date}</div>
+                    </div>
+                    <div class="group-bar-container">
+                        <div class="group-bar" style="width: 0%"></div>
+                    </div>
+                `;
+                
+                container.appendChild(groupRow);
+                
+                // Trigger animation after append
+                setTimeout(() => {
+                    groupRow.querySelector('.group-bar').style.width = `${pct}%`;
+                }, 100);
+            });
+        }
+
+        function applyFilters() {
+            const query = document.getElementById('search-input').value.toLowerCase().trim();
+            const groupFilter = document.getElementById('group-filter').value;
+            
+            appState.filteredDonations = appState.donations.filter(d => {
+                // Group match
+                if (groupFilter && d.group_id !== groupFilter) return false;
+                
+                // Keyword match (Name, Location, Group Name)
+                if (query) {
+                    const matchName = d.contributor.toLowerCase().includes(query);
+                    const matchLoc = d.location.toLowerCase().includes(query);
+                    const matchGroup = d.group_name.toLowerCase().includes(query);
+                    return matchName || matchLoc || matchGroup;
+                }
+                
+                return true;
+            });
+            
+            // Sort data
+            sortData();
+            
+            // Reset to page 1 on filter
+            appState.pagination.page = 1;
+            renderTable();
+        }
+
+        function handleSort(column) {
+            if (appState.sorting.column === column) {
+                appState.sorting.ascending = !appState.sorting.ascending;
+            } else {
+                appState.sorting.column = column;
+                appState.sorting.ascending = (column === 'contributor' || column === 'location' || column === 'group_name'); // alphabetical asc, numbers desc
+            }
+            
+            // Update table headers classes
+            const headers = ['contributor', 'location', 'group_name', 'total', 'report_date'];
+            const headerIds = ['th-contributor', 'th-location', 'th-group', 'th-amount', 'th-date'];
+            
+            headers.forEach((h, idx) => {
+                const el = document.getElementById(headerIds[idx]);
+                el.className = el.className.replace(/\bsort-\w+\b/g, ''); // Clear sort classes
+                if (h === appState.sorting.column) {
+                    el.classList.add(appState.sorting.ascending ? 'sort-asc' : 'sort-desc');
+                }
+            });
+            
+            sortData();
+            renderTable();
+        }
+
+        function sortData() {
+            const { column, ascending } = appState.sorting;
+            
+            appState.filteredDonations.sort((a, b) => {
+                let valA = a[column];
+                let valB = b[column];
+                
+                // Put summary rows at the very bottom, regardless of sorting
+                const isSumA = a.contributor === "[Summary - Contributions $250 and under]";
+                const isSumB = b.contributor === "[Summary - Contributions $250 and under]";
+                if (isSumA && !isSumB) return 1;
+                if (!isSumA && isSumB) return -1;
+                if (isSumA && isSumB) return 0;
+                
+                if (typeof valA === 'string') {
+                    // String sorting
+                    if (column === 'report_date') {
+                        // Date sorting
+                        valA = parseReportDate(valA);
+                        valB = parseReportDate(valB);
+                    } else {
+                        valA = valA.toLowerCase();
+                        valB = valB.toLowerCase();
+                    }
+                }
+                
+                if (valA < valB) return ascending ? -1 : 1;
+                if (valA > valB) return ascending ? 1 : -1;
+                return 0;
+            });
+        }
+
+        function parseReportDate(dateStr) {
+            // Helper to parse dates like "Jul 2, 2026"
+            try {
+                const d = new Date(dateStr);
+                if (isNaN(d.getTime())) return new Date(0);
+                return d;
+            } catch (e) {
+                return new Date(0);
+            }
+        }
+
+        function renderTable() {
+            const tbody = document.getElementById('table-body');
+            const data = appState.filteredDonations;
+            const { page, perPage } = appState.pagination;
+            
+            tbody.innerHTML = '';
+            
+            if (data.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="empty-state">No matching donations found.</td></tr>`;
+                document.getElementById('table-info').textContent = "Showing 0 of 0 donations";
+                document.getElementById('btn-prev').disabled = true;
+                document.getElementById('btn-next').disabled = true;
+                return;
+            }
+            
+            // Calculate Pagination
+            const startIdx = (page - 1) * perPage;
+            const endIdx = Math.min(startIdx + perPage, data.length);
+            const totalPages = Math.ceil(data.length / perPage);
+            appState.pagination.totalPages = totalPages;
+            
+            const pageData = data.slice(startIdx, endIdx);
+            
+            pageData.forEach(d => {
+                const tr = document.createElement('tr');
+                const isSummaryRow = d.contributor === "[Summary - Contributions $250 and under]";
+                
+                if (isSummaryRow) {
+                    tr.className = "td-summary-row";
+                    tr.innerHTML = `
+                        <td><strong>Anonymous (Contributions &le; $250)</strong></td>
+                        <td>-</td>
+                        <td>${d.group_name}</td>
+                        <td class="text-right td-amount">${formatCurrency(d.total)}</td>
+                        <td><span class="badge-date">${d.report_date}</span></td>
+                    `;
+                } else {
+                    tr.innerHTML = `
+                        <td><strong>${d.contributor}</strong></td>
+                        <td>${d.location || 'Unknown'}</td>
+                        <td>${d.group_name}</td>
+                        <td class="text-right td-amount">${formatCurrency(d.total)}</td>
+                        <td><span class="badge-date">${d.report_date}</span></td>
+                    `;
+                }
+                tbody.appendChild(tr);
+            });
+            
+            // Update pagination info
+            document.getElementById('table-info').textContent = `Showing ${startIdx + 1}-${endIdx} of ${data.length} donations`;
+            document.getElementById('btn-prev').disabled = page === 1;
+            document.getElementById('btn-next').disabled = page === totalPages;
+        }
+
+        function changePage(delta) {
+            const targetPage = appState.pagination.page + delta;
+            if (targetPage >= 1 && targetPage <= appState.pagination.totalPages) {
+                appState.pagination.page = targetPage;
+                renderTable();
+            }
+        }
+
+        // Format helpers
+        function formatCurrency(val) {
+            return new Intl.NumberFormat('en-CA', { style: 'currency', currency: 'CAD' }).format(val);
+        }
+
+        function showError(msg) {
+            const tbody = document.getElementById('table-body');
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="5">
+                        <div class="empty-state" style="color: #ef4444; font-weight: 500;">
+                            ⚠️ Error loading data: ${msg}<br>
+                            <span style="font-size: 0.8rem; font-weight: normal; color: var(--text-muted);">
+                                Please make sure you are running the project from a web server or have run the scraper to generate local data files.
+                            </span>
+                        </div>
+                    </td>
+                </tr>
+            `;
+            document.getElementById('groups-list-container').innerHTML = `
+                <div class="empty-state" style="color: #ef4444; padding: 12px 0;">Error loading groups data.</div>
+            `;
+        }
+    </script>
+</body>
+</html>
