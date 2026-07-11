@@ -59,9 +59,12 @@ To host this on GitHub and automate it:
 
 ## Automation Schedule
 
-The GitHub Action is pre-configured in [.github/workflows/tracker.yml](.github/workflows/tracker.yml) to run on a dual schedule:
-- **Fridays & Saturdays**: Runs **every 2 hours** (UTC) to promptly capture the weekly updates published every Friday.
-- **Sundays – Thursdays**: Runs **once daily** at 12:00 PM (UTC) to check for mid-week advertiser registrations.
+The GitHub Action is pre-configured in [.github/workflows/tracker.yml](.github/workflows/tracker.yml) to run on the following schedule (adjusted to Mountain Time for Alberta):
+- **Thursdays (Afternoon & Evening)**: Runs **every hour** (from 12:00 PM MDT/MST onwards) to check for early releases.
+- **Fridays**: Runs **every hour** in the early morning (until 12:00 AM MDT/MST Friday), and then **every 2 hours** for the remainder of the day.
+- **Saturdays**: Runs **every 2 hours** to monitor any late portal updates.
+- **Sundays – Wednesdays**: Runs **once daily** (12:00 PM UTC) to check for mid-week registrations.
+- **Thursday Mornings**: Runs **once daily** (12:00 PM UTC / 6:00 AM MDT) to check for mid-week registrations before the afternoon hourly checks begin.
 - **Manual Trigger**: You can run it manually at any time by going to the **Actions** tab in your GitHub repository, selecting the workflow, and clicking **Run workflow**. Checking "Force scraper run" will bypass the date check.
 
 ---

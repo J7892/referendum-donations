@@ -621,7 +621,7 @@
                 totalPages: 1
             },
             sorting: {
-                column: 'total', // Sort by amount by default
+                column: 'report_date', // Sort by date by default
                 ascending: false
             }
         };
@@ -805,18 +805,6 @@
                 appState.sorting.ascending = (column === 'contributor' || column === 'location' || column === 'group_name'); // alphabetical asc, numbers desc
             }
             
-            // Update table headers classes
-            const headers = ['contributor', 'location', 'group_name', 'total', 'report_date'];
-            const headerIds = ['th-contributor', 'th-location', 'th-group', 'th-amount', 'th-date'];
-            
-            headers.forEach((h, idx) => {
-                const el = document.getElementById(headerIds[idx]);
-                el.className = el.className.replace(/\bsort-\w+\b/g, ''); // Clear sort classes
-                if (h === appState.sorting.column) {
-                    el.classList.add(appState.sorting.ascending ? 'sort-asc' : 'sort-desc');
-                }
-            });
-            
             sortData();
             renderTable();
         }
@@ -854,14 +842,34 @@
         }
 
         function parseReportDate(dateStr) {
-            // Helper to parse dates like "Jul 2, 2026"
-            try {
-                const d = new Date(dateStr);
-                if (isNaN(d.getTime())) return new Date(0);
-                return d;
-            } catch (e) {
+            if (!dateStr) return new Date(0);
+            
+            // Clean up the string (remove any quotes or extra whitespace)
+            const cleanStr = dateStr.replace(/['"]/g, '').trim();
+            
+            // Expected format: "Jul 2, 2026" or "July 2, 2026"
+            const match = cleanStr.match(/^([A-Za-z]+)\s+(\d{1,2}),\s+(\d{4})$/);
+            if (!match) {
+                // Fallback to default Date constructor
+                const d = new Date(cleanStr);
+                return isNaN(d.getTime()) ? new Date(0) : d;
+            }
+            
+            const monthName = match[1].toLowerCase().substring(0, 3);
+            const day = parseInt(match[2], 10);
+            const year = parseInt(match[3], 10);
+            
+            const months = {
+                jan: 0, feb: 1, mar: 2, apr: 3, may: 4, jun: 5,
+                jul: 6, aug: 7, sep: 8, oct: 9, nov: 10, dec: 11
+            };
+            
+            const month = months[monthName];
+            if (month === undefined || isNaN(day) || isNaN(year)) {
                 return new Date(0);
             }
+            
+            return new Date(year, month, day);
         }
 
         function renderTable() {
@@ -870,6 +878,20 @@
             const { page, perPage } = appState.pagination;
             
             tbody.innerHTML = '';
+            
+            // Update table headers sorting classes to reflect current sorting state
+            const headers = ['contributor', 'location', 'group_name', 'total', 'report_date'];
+            const headerIds = ['th-contributor', 'th-location', 'th-group', 'th-amount', 'th-date'];
+            
+            headers.forEach((h, idx) => {
+                const el = document.getElementById(headerIds[idx]);
+                if (el) {
+                    el.className = el.className.replace(/\bsort-\w+\b/g, '').trim(); // Clear sort classes
+                    if (h === appState.sorting.column) {
+                        el.classList.add(appState.sorting.ascending ? 'sort-asc' : 'sort-desc');
+                    }
+                }
+            });
             
             if (data.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="5" class="empty-state">No matching donations found.</td></tr>`;
