@@ -7,7 +7,7 @@
       "event_id": 128,
       "account_id": 9911,
       "total_contributions": 256707.95,
-      "net_change": 22929.0,
+      "net_change": 0.0,
       "last_update_date": "Jul 16, 2026"
     },
     "134": {
@@ -16,7 +16,7 @@
       "event_id": 128,
       "account_id": 9902,
       "total_contributions": 88740.3,
-      "net_change": 3709.0,
+      "net_change": 0.0,
       "last_update_date": "Jul 16, 2026"
     },
     "132": {
@@ -25,7 +25,7 @@
       "event_id": 128,
       "account_id": 9900,
       "total_contributions": 51295.0,
-      "net_change": 6370.0,
+      "net_change": 0.0,
       "last_update_date": "Jul 16, 2026"
     },
     "133": {
@@ -34,7 +34,7 @@
       "event_id": 128,
       "account_id": 9901,
       "total_contributions": 30315.0,
-      "net_change": 5200.0,
+      "net_change": 0.0,
       "last_update_date": "Jul 16, 2026"
     },
     "136": {
@@ -43,7 +43,7 @@
       "event_id": 128,
       "account_id": 9904,
       "total_contributions": 26649.13,
-      "net_change": 4925.0,
+      "net_change": 0.0,
       "last_update_date": "Jul 16, 2026"
     },
     "139": {
@@ -52,7 +52,7 @@
       "event_id": 128,
       "account_id": 9907,
       "total_contributions": 21896.29,
-      "net_change": 10175.0,
+      "net_change": 0.0,
       "last_update_date": "Jul 16, 2026"
     },
     "135": {
@@ -61,7 +61,7 @@
       "event_id": 128,
       "account_id": 9903,
       "total_contributions": 20640.0,
-      "net_change": 10250.0,
+      "net_change": 0.0,
       "last_update_date": "Jul 16, 2026"
     },
     "144": {
@@ -70,7 +70,7 @@
       "event_id": 128,
       "account_id": 9912,
       "total_contributions": 20150.0,
-      "net_change": 2050.0,
+      "net_change": 0.0,
       "last_update_date": "Jul 16, 2026"
     },
     "141": {
@@ -79,7 +79,7 @@
       "event_id": 128,
       "account_id": 9909,
       "total_contributions": 14059.0,
-      "net_change": 3235.0,
+      "net_change": 0.0,
       "last_update_date": "Jul 16, 2026"
     },
     "138": {
@@ -88,7 +88,7 @@
       "event_id": 128,
       "account_id": 9906,
       "total_contributions": 12216.0,
-      "net_change": 649.0,
+      "net_change": 0.0,
       "last_update_date": "Jul 16, 2026"
     },
     "131": {
@@ -106,7 +106,7 @@
       "event_id": 128,
       "account_id": 9916,
       "total_contributions": 6898.01,
-      "net_change": 2299.5300000000007,
+      "net_change": 0.0,
       "last_update_date": "Jul 16, 2026"
     },
     "146": {
@@ -115,7 +115,7 @@
       "event_id": 128,
       "account_id": 9914,
       "total_contributions": 1755.0,
-      "net_change": 1755.0,
+      "net_change": 0.0,
       "last_update_date": "Jul 16, 2026"
     },
     "142": {
@@ -124,7 +124,7 @@
       "event_id": 128,
       "account_id": 9910,
       "total_contributions": 959.76,
-      "net_change": 350.0,
+      "net_change": 0.0,
       "last_update_date": "Jul 16, 2026"
     },
     "147": {
@@ -133,7 +133,7 @@
       "event_id": 128,
       "account_id": 9915,
       "total_contributions": 200.0,
-      "net_change": 200.0,
+      "net_change": 0.0,
       "last_update_date": "Jul 16, 2026"
     },
     "137": {
@@ -142,7 +142,7 @@
       "event_id": 128,
       "account_id": 9905,
       "total_contributions": 200.0,
-      "net_change": -20.0,
+      "net_change": 0.0,
       "last_update_date": "Jul 9, 2026"
     },
     "151": {
@@ -198,6 +198,15 @@
       "total_contributions": 0.0,
       "net_change": 0.0,
       "last_update_date": "Jun 8, 2026"
+    },
+    "153": {
+      "name": "Alberta Lawyers for Judicial Independence",
+      "registered_date": "Jul 17, 2026",
+      "event_id": 128,
+      "account_id": 9922,
+      "total_contributions": 0.0,
+      "net_change": 0.0,
+      "last_update_date": "Jul 16, 2026"
     }
   }
 }
