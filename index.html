@@ -585,6 +585,43 @@
             gap: 8px;
         }
 
+        .pagination-controls {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .per-page-selector {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .per-page-select {
+            background-color: var(--bg-input);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 4px 20px 4px 8px;
+            color: var(--text-primary);
+            font-family: var(--font-body);
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: var(--transition);
+            /* Custom dropdown arrow styling */
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 6px center;
+            background-size: 10px;
+        }
+
+        .per-page-select:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+        }
+
         .btn {
             background-color: var(--bg-btn);
             border: 1px solid var(--border-color);
@@ -743,9 +780,19 @@
                 <!-- Pagination Footer -->
                 <div class="explorer-footer">
                     <div id="table-info">Showing 0 of 0 donations</div>
-                    <div class="pagination-btn-group">
-                        <button class="btn" id="btn-prev" onclick="changePage(-1)" disabled>Previous</button>
-                        <button class="btn" id="btn-next" onclick="changePage(1)" disabled>Next</button>
+                    <div class="pagination-controls">
+                        <div class="per-page-selector">
+                            <span>Show:</span>
+                            <select id="per-page-select" class="per-page-select" aria-label="Entries per page">
+                                <option value="25">25</option>
+                                <option value="50">50</option>
+                                <option value="100">100</option>
+                            </select>
+                        </div>
+                        <div class="pagination-btn-group">
+                            <button class="btn" id="btn-prev" onclick="changePage(-1)" disabled>Previous</button>
+                            <button class="btn" id="btn-next" onclick="changePage(1)" disabled>Next</button>
+                        </div>
                     </div>
                 </div>
             </main>
@@ -816,6 +863,13 @@
             // Set up search and filter listeners
             document.getElementById('search-input').addEventListener('input', applyFilters);
             document.getElementById('group-filter').addEventListener('change', applyFilters);
+            
+            // Set up entries per page listener
+            document.getElementById('per-page-select').addEventListener('change', (e) => {
+                appState.pagination.perPage = parseInt(e.target.value, 10);
+                appState.pagination.page = 1; // Reset to page 1
+                renderTable();
+            });
         });
 
         async function loadDashboardData() {
