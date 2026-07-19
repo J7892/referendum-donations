@@ -487,8 +487,6 @@
         .table-responsive {
             width: 100%;
             overflow-x: auto;
-            overflow-y: auto;
-            max-height: 520px;
             margin-bottom: 20px;
             border-radius: 12px;
             border: 1px solid var(--border-color);
@@ -503,10 +501,7 @@
         }
 
         th {
-            position: sticky;
-            top: 0;
-            z-index: 2;
-            background-color: var(--bg-th-solid);
+            background-color: var(--bg-th);
             color: var(--text-secondary);
             font-weight: 600;
             padding: 8px 10px;
@@ -516,6 +511,7 @@
             border-bottom: 1px solid var(--border-color);
             cursor: pointer;
             user-select: none;
+            position: relative;
             transition: var(--transition);
         }
 
