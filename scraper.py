@@ -680,14 +680,30 @@ def main():
                     'registered_date': g['registered_date']
                 })
                 
-            prev_total = prev_groups.get(g_id, {}).get("total_contributions", 0.0)
-            net_change = current_total - prev_total
+            prev_group_data = prev_groups.get(g_id, {})
+            
+            if date_changed or is_new_group:
+                # If a new portal date arrived, base total for this week is previous total_contributions.
+                # If brand new group, base is 0.0 (or previous total_contributions if existing in prev_groups).
+                prev_report_total = prev_group_data.get('total_contributions', 0.0) if not is_new_group else 0.0
+            else:
+                # Same portal date! Maintain previous week's base total
+                if 'prev_report_total' in prev_group_data:
+                    prev_report_total = prev_group_data['prev_report_total']
+                elif 'total_contributions' in prev_group_data:
+                    # Fallback if prev_report_total wasn't explicitly saved yet
+                    prev_report_total = prev_group_data['total_contributions'] - prev_group_data.get('net_change', 0.0)
+                else:
+                    prev_report_total = 0.0
+                    
+            net_change = current_total - prev_report_total
             
             group_changes[g_id] = {
                 'name': name,
-                'prev_total': prev_total,
+                'prev_total': prev_report_total,
                 'current_total': current_total,
-                'net_change': net_change
+                'net_change': net_change,
+                'prev_report_total': prev_report_total
             }
             
             # Default empty lists if no account_id/event_id (rare, means $0 and not fully set up)
@@ -792,7 +808,10 @@ def main():
         if not args.dry_run:
             new_groups_state = {}
             for g_id, g in groups.items():
-                net_chg = group_changes.get(g_id, {}).get('net_change', 0.0)
+                change_info = group_changes.get(g_id, {})
+                net_chg = change_info.get('net_change', 0.0)
+                prev_rep_tot = change_info.get('prev_report_total', 0.0)
+                
                 # If there's an update, set last_update_date to update_date
                 if net_chg > 0.0 or g_id not in prev_groups:
                     last_up_date = update_date
@@ -805,6 +824,7 @@ def main():
                     'event_id': g['event_id'],
                     'account_id': g['account_id'],
                     'total_contributions': g['total_contributions'],
+                    'prev_report_total': prev_rep_tot,
                     'net_change': net_chg,
                     'last_update_date': last_up_date
                 }
