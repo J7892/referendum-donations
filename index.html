@@ -72,6 +72,7 @@
             --bg-scrollbar-thumb: #cbd5e1;
             --bg-scrollbar-thumb-hover: #94a3b8;
             --bg-th-solid: #ffffff;
+            --color-uncategorized: #7c3aed;
         }
 
         html[data-theme="dark"] {
@@ -113,6 +114,7 @@
             --bg-scrollbar-thumb: #334155;
             --bg-scrollbar-thumb-hover: #475569;
             --bg-th-solid: #151e2e;
+            --color-uncategorized: #a78bfa;
         }
 
         /* Reset & Base Styles */
@@ -414,14 +416,130 @@
             background: var(--bg-group-row-hover);
         }
 
+        .group-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4px;
+        }
+
         .group-name {
             font-weight: 600;
             font-size: 0.85rem;
-            margin-bottom: 4px;
             color: var(--text-primary);
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            flex: 1;
+            margin-right: 8px;
+        }
+
+        /* Card Borders for Campaigns */
+        .metric-card.gold-border {
+            border-top: 4px solid var(--accent-gold);
+        }
+        .metric-card.blue-border {
+            border-top: 4px solid var(--accent-blue);
+        }
+
+        /* Campaign Balance / Funding Split */
+        .campaign-balance-box {
+            background: var(--bg-card);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 12px 16px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+        }
+
+        .balance-labels {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.82rem;
+            margin-bottom: 8px;
+            font-family: var(--font-title);
+        }
+
+        .label-leave {
+            color: var(--accent-gold);
+            font-weight: 600;
+        }
+
+        .label-stay {
+            color: var(--accent-blue);
+            font-weight: 600;
+        }
+
+        .label-versus {
+            color: var(--text-secondary);
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: 700;
+        }
+
+        .balance-bar-container {
+            height: 10px;
+            width: 100%;
+            border-radius: 9999px;
+            background-color: var(--bg-bar-container);
+            overflow: hidden;
+            display: flex;
+        }
+
+        .balance-bar-leave {
+            background: linear-gradient(90deg, var(--accent-gold), var(--accent-gold-hover, #b45309));
+            height: 100%;
+            transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .balance-bar-stay {
+            background: linear-gradient(90deg, var(--accent-blue), #1d4ed8);
+            height: 100%;
+            transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .balance-bar-na {
+            background: linear-gradient(90deg, var(--text-muted), #475569);
+            height: 100%;
+            transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Campaign Badges */
+        .badge {
+            font-size: 0.6rem;
+            padding: 1px 5px;
+            border-radius: 4px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.02em;
+            white-space: nowrap;
+        }
+
+        .badge-leave {
+            background-color: rgba(245, 158, 11, 0.12);
+            color: var(--accent-gold);
+            border: 1px solid rgba(245, 158, 11, 0.25);
+        }
+
+        .badge-stay {
+            background-color: rgba(59, 130, 246, 0.12);
+            color: var(--accent-blue);
+            border: 1px solid rgba(59, 130, 246, 0.25);
+        }
+
+        .badge-na {
+            background-color: rgba(100, 116, 139, 0.12);
+            color: var(--text-muted);
+            border: 1px solid rgba(100, 116, 139, 0.2);
+        }
+
+        .badge-uncategorized {
+            background-color: rgba(124, 58, 237, 0.12);
+            color: var(--color-uncategorized);
+            border: 1px solid rgba(124, 58, 237, 0.2);
         }
 
         .group-metrics {
@@ -734,6 +852,20 @@
             </div>
         </header>
 
+        <!-- Campaign Balance Bar -->
+        <div class="campaign-balance-box">
+            <div class="balance-labels">
+                <span class="label-leave">Leave Campaign: <strong id="balance-leave-val">$0.00</strong> (<span id="balance-leave-pct">0%</span>)</span>
+                <span class="label-versus">Funding Split</span>
+                <span class="label-stay">Stay Campaign: <strong id="balance-stay-val">$0.00</strong> (<span id="balance-stay-pct">0%</span>)</span>
+            </div>
+            <div class="balance-bar-container">
+                <div class="balance-bar-leave" id="bar-leave" style="width: 0%"></div>
+                <div class="balance-bar-stay" id="bar-stay" style="width: 0%"></div>
+                <div class="balance-bar-na" id="bar-na" style="width: 0%"></div>
+            </div>
+        </div>
+
         <!-- Metrics Overview Grid -->
         <div class="metrics-grid" id="metrics-container">
             <div class="metric-card gold">
@@ -745,6 +877,16 @@
                 <p class="metric-title">Weekly Net Change</p>
                 <div class="metric-value positive" id="stat-net-change">+$0.00</div>
                 <div class="metric-sub" id="stat-net-change-sub">Funds added in latest Friday update</div>
+            </div>
+            <div class="metric-card gold-border">
+                <p class="metric-title">Total Leave Funding</p>
+                <div class="metric-value" id="stat-leave-total">$0.00</div>
+                <div class="metric-sub" id="stat-leave-card-pct">0% of total funding</div>
+            </div>
+            <div class="metric-card blue-border">
+                <p class="metric-title">Total Stay Funding</p>
+                <div class="metric-value" id="stat-stay-total">$0.00</div>
+                <div class="metric-sub" id="stat-stay-card-pct">0% of total funding</div>
             </div>
             <div class="metric-card">
                 <p class="metric-title">Advertiser Groups</p>
@@ -850,6 +992,47 @@
                 ascending: false
             }
         };
+
+        // Campaign Positions Mapping
+        const POSITION_MAPPING = {
+            // LEAVE
+            "Let Alberta Decide": "LEAVE",
+            "Pathway to Independence": "LEAVE",
+            "The Lavigne Show": "LEAVE",
+            "Alberta Land Consortium Inc.": "LEAVE",
+            "Alberta's Choice": "LEAVE",
+            "United Alberta Flags": "LEAVE",
+            "Alberta Women for Independence": "LEAVE",
+            "Albertans4Freedom Inc.": "LEAVE",
+            "North Alberta Strong": "LEAVE",
+            "Alberta Radio Show": "LEAVE",
+            "Alberta Forward": "LEAVE",
+            "United for Canada - UnitedFor.CA": "LEAVE",
+            "Alberta Nation Corporation (DBA Alberta Nation Events)": "LEAVE",
+            "NoThanks.Vote": "LEAVE",
+            "Alberta Liberty": "LEAVE",
+            "Stay Free Alberta": "LEAVE",
+            "Free Alberta From Overreach": "LEAVE",
+            "Freedom 2027": "LEAVE",
+            
+            // STAY
+            "Alberta's Voice": "STAY",
+            "Vote to Stay": "STAY",
+            "Together - \"No!\" (Public Interest Alberta)": "STAY",
+            "Forever-Canadian Citizens Initiative Society": "STAY",
+            
+            // N/A
+            "Alberta Advantage Immigrant Support Society (Our Alberta Advantage)": "N/A",
+            "Alberta Lawyers for Judicial Independence": "N/A"
+        };
+
+        function getAdvertiserPosition(name) {
+            const normalized = name.replace(/[\u201C\u201D]/g, '"').trim();
+            if (POSITION_MAPPING[normalized]) {
+                return POSITION_MAPPING[normalized];
+            }
+            return "UNCATEGORIZED";
+        }
 
         // Theme Management Logic
         const themeMedia = window.matchMedia('(prefers-color-scheme: dark)');
@@ -960,15 +1143,52 @@
             
             let grandTotal = 0;
             let netChange = 0;
+            let leaveTotal = 0;
+            let stayTotal = 0;
+            let naTotal = 0;
+            let uncategorizedTotal = 0;
             const groupsCount = Object.keys(meta.groups).length;
             
             Object.values(meta.groups).forEach(g => {
                 grandTotal += g.total_contributions;
                 netChange += g.net_change;
+                
+                const pos = getAdvertiserPosition(g.name);
+                if (pos === "LEAVE") {
+                    leaveTotal += g.total_contributions;
+                } else if (pos === "STAY") {
+                    stayTotal += g.total_contributions;
+                } else if (pos === "N/A") {
+                    naTotal += g.total_contributions;
+                } else {
+                    uncategorizedTotal += g.total_contributions;
+                }
             });
             
-            document.getElementById('stat-grand-total').textContent = formatCurrency(grandTotal);
+            // Compute Percentages
+            const leavePct = grandTotal > 0 ? (leaveTotal / grandTotal) * 100 : 0;
+            const stayPct = grandTotal > 0 ? (stayTotal / grandTotal) * 100 : 0;
+            const naPct = grandTotal > 0 ? (naTotal / grandTotal) * 100 : 0;
+            const uncatPct = grandTotal > 0 ? (uncategorizedTotal / grandTotal) * 100 : 0;
             
+            // Update Card Totals
+            document.getElementById('stat-grand-total').textContent = formatCurrency(grandTotal);
+            document.getElementById('stat-leave-total').textContent = formatCurrency(leaveTotal);
+            document.getElementById('stat-stay-total').textContent = formatCurrency(stayTotal);
+            document.getElementById('stat-leave-card-pct').textContent = `${leavePct.toFixed(1)}% of total funding`;
+            document.getElementById('stat-stay-card-pct').textContent = `${stayPct.toFixed(1)}% of total funding`;
+            
+            // Update Campaign Balance Bar
+            document.getElementById('balance-leave-val').textContent = formatCurrency(leaveTotal);
+            document.getElementById('balance-leave-pct').textContent = `${leavePct.toFixed(1)}%`;
+            document.getElementById('balance-stay-val').textContent = formatCurrency(stayTotal);
+            document.getElementById('balance-stay-pct').textContent = `${stayPct.toFixed(1)}%`;
+            
+            document.getElementById('bar-leave').style.width = `${leavePct}%`;
+            document.getElementById('bar-stay').style.width = `${stayPct}%`;
+            document.getElementById('bar-na').style.width = `${naPct + uncatPct}%`;
+            
+            // Weekly net change
             const netValEl = document.getElementById('stat-net-change');
             netValEl.textContent = (netChange >= 0 ? '+' : '') + formatCurrency(netChange);
             if (netChange > 0) {
@@ -1018,17 +1238,31 @@
             sortedGroups.forEach(([id, g]) => {
                 const pct = grandTotal > 0 ? (g.total_contributions / grandTotal) * 100 : 0;
                 const changeText = g.net_change > 0 ? ` (+${formatCurrency(g.net_change)})` : '';
+                const position = getAdvertiserPosition(g.name);
+                const badgeClass = position === "N/A" ? "na" : position.toLowerCase();
+                
+                let barBg = 'var(--accent-gold)';
+                if (position === 'STAY') {
+                    barBg = 'var(--accent-blue)';
+                } else if (position === 'N/A') {
+                    barBg = 'var(--text-muted)';
+                } else if (position === 'UNCATEGORIZED') {
+                    barBg = 'var(--color-uncategorized)';
+                }
                 
                 const groupRow = document.createElement('div');
                 groupRow.className = "group-row";
                 groupRow.innerHTML = `
-                    <div class="group-name" title="${g.name}">${g.name}</div>
+                    <div class="group-header">
+                        <div class="group-name" title="${g.name}">${g.name}</div>
+                        <span class="badge badge-${badgeClass}">${position === 'N/A' ? 'N/A' : position}</span>
+                    </div>
                     <div class="group-metrics">
                         <div class="group-total">${formatCurrency(g.total_contributions)}<span style="font-size: 0.75rem; font-weight: normal; color: var(--accent-green)">${changeText}</span></div>
                         <div class="group-update">Updated: ${g.last_update_date}</div>
                     </div>
                     <div class="group-bar-container">
-                        <div class="group-bar" style="width: 0%"></div>
+                        <div class="group-bar" style="width: 0%; background: ${barBg};"></div>
                     </div>
                 `;
                 
