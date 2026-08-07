@@ -2,18 +2,16 @@ name: Alberta Referendum Donations Tracker
 
 on:
   schedule:
-    # Hourly checks on Thursday afternoon/evening (12:00 PM - 5:00 PM MDT / 18:00 - 23:00 UTC)
-    - cron: '0 18-23 * * 4'
-    # Hourly checks on Thursday night / Friday early morning (6:00 PM Thursday - 12:00 AM Friday MDT / 00:00 - 06:00 UTC)
-    - cron: '0 0-6 * * 5'
-    # Periodic checks (every 2 hours) on the rest of Friday (8:00 AM - 11:59 PM UTC)
-    - cron: '0 8-23/2 * * 5'
-    # Periodic checks (every 2 hours) on Saturday (UTC)
-    - cron: '0 */2 * * 6'
-    # Daily checks Sunday to Wednesday (12:00 UTC)
-    - cron: '0 12 * * 0-3'
-    # Daily check Thursday morning (12:00 UTC / 6:00 AM MDT)
+    # Daily checks Sunday to Wednesday, and Saturday (12:00 UTC / 6:00 AM MT)
+    - cron: '0 12 * * 0-3,6'
+    # Daily check Thursday morning (12:00 UTC / 6:00 AM MT)
     - cron: '0 12 * * 4'
+    # Every two hours on Thursday (9:00 AM - 5:00 PM MT / 15:00 - 23:00 UTC)
+    - cron: '0 15-23/2 * * 4'
+    # Once an hour on Friday (8:00 AM - 5:00 PM MT / 14:00 - 23:00 UTC)
+    - cron: '0 14-23 * * 5'
+    # Once an hour on Friday night (6:00 PM - 8:00 PM MT / 00:00 - 02:00 UTC Saturday)
+    - cron: '0 0-2 * * 6'
   workflow_dispatch:
     inputs:
       force:
