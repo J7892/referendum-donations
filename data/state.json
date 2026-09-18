@@ -1,105 +1,105 @@
 {
-  "last_processed_date": "Sep 10, 2026",
+  "last_processed_date": "Sep 17, 2026",
   "groups": {
     "143": {
       "name": "Let Alberta Decide",
       "registered_date": "Jun 17, 2026",
       "event_id": 128,
       "account_id": 9911,
-      "total_contributions": 502258.95,
-      "prev_report_total": 484988.95,
-      "net_change": 17270.0,
-      "last_update_date": "Sep 10, 2026"
+      "total_contributions": 526133.95,
+      "prev_report_total": 502258.95,
+      "net_change": 23874.99999999994,
+      "last_update_date": "Sep 17, 2026"
     },
     "132": {
       "name": "Alberta's Voice",
       "registered_date": "May 25, 2026",
       "event_id": 128,
       "account_id": 9900,
-      "total_contributions": 178510.68,
-      "prev_report_total": 152421.06,
-      "net_change": 26089.619999999995,
-      "last_update_date": "Sep 10, 2026"
+      "total_contributions": 237825.83,
+      "prev_report_total": 178510.68,
+      "net_change": 59315.149999999994,
+      "last_update_date": "Sep 17, 2026"
     },
     "134": {
       "name": "Pathway to Independence",
       "registered_date": "Jun 2, 2026",
       "event_id": 128,
       "account_id": 9902,
-      "total_contributions": 124997.3,
-      "prev_report_total": 123247.3,
-      "net_change": 1750.0,
-      "last_update_date": "Sep 10, 2026"
+      "total_contributions": 127936.3,
+      "prev_report_total": 124997.3,
+      "net_change": 2939.0,
+      "last_update_date": "Sep 17, 2026"
     },
     "139": {
       "name": "Vote to Stay",
       "registered_date": "Jun 2, 2026",
       "event_id": 128,
       "account_id": 9907,
-      "total_contributions": 96791.29,
-      "prev_report_total": 97791.29,
-      "net_change": -1000.0,
-      "last_update_date": "Sep 3, 2026"
+      "total_contributions": 108441.29,
+      "prev_report_total": 96791.29,
+      "net_change": 11650.0,
+      "last_update_date": "Sep 17, 2026"
     },
     "133": {
       "name": "Alberta Land Consortium Inc.",
       "registered_date": "Jun 2, 2026",
       "event_id": 128,
       "account_id": 9901,
-      "total_contributions": 58225.0,
-      "prev_report_total": 55005.0,
-      "net_change": 3220.0,
-      "last_update_date": "Sep 10, 2026"
+      "total_contributions": 58965.0,
+      "prev_report_total": 58225.0,
+      "net_change": 740.0,
+      "last_update_date": "Sep 17, 2026"
     },
     "140": {
       "name": "Stay Free Alberta",
       "registered_date": "Jun 5, 2026",
       "event_id": 128,
       "account_id": 9908,
-      "total_contributions": 45795.59,
-      "prev_report_total": 44185.59,
-      "net_change": 1610.0,
-      "last_update_date": "Sep 10, 2026"
+      "total_contributions": 45895.59,
+      "prev_report_total": 45795.59,
+      "net_change": 100.0,
+      "last_update_date": "Sep 17, 2026"
     },
     "136": {
       "name": "The Lavigne Show",
       "registered_date": "Jun 2, 2026",
       "event_id": 128,
       "account_id": 9904,
-      "total_contributions": 45138.45,
+      "total_contributions": 45238.45,
       "prev_report_total": 45138.45,
-      "net_change": 0.0,
-      "last_update_date": "Aug 27, 2026"
+      "net_change": 100.0,
+      "last_update_date": "Sep 17, 2026"
     },
     "135": {
       "name": "Together - \"No!\" (Public Interest Alberta)",
       "registered_date": "Jun 2, 2026",
       "event_id": 128,
       "account_id": 9903,
-      "total_contributions": 39925.0,
-      "prev_report_total": 37740.0,
-      "net_change": 2185.0,
-      "last_update_date": "Sep 10, 2026"
+      "total_contributions": 44815.0,
+      "prev_report_total": 39925.0,
+      "net_change": 4890.0,
+      "last_update_date": "Sep 17, 2026"
     },
     "141": {
       "name": "Alberta's Choice",
       "registered_date": "Jun 5, 2026",
       "event_id": 128,
       "account_id": 9909,
-      "total_contributions": 36577.95,
-      "prev_report_total": 35937.95,
-      "net_change": 640.0,
-      "last_update_date": "Sep 10, 2026"
+      "total_contributions": 38427.95,
+      "prev_report_total": 36577.95,
+      "net_change": 1850.0,
+      "last_update_date": "Sep 17, 2026"
     },
     "131": {
       "name": "Alberta Advantage Immigrant Support Society (Our Alberta Advantage)",
       "registered_date": "May 4, 2026",
       "event_id": 128,
       "account_id": 9897,
-      "total_contributions": 35744.09,
-      "prev_report_total": 35707.63,
-      "net_change": 36.45999999999913,
-      "last_update_date": "Sep 10, 2026"
+      "total_contributions": 37794.77,
+      "prev_report_total": 35744.09,
+      "net_change": 2050.6800000000003,
+      "last_update_date": "Sep 17, 2026"
     },
     "138": {
       "name": "Alberta Women for Independence",
@@ -116,10 +116,10 @@
       "registered_date": "Jun 19, 2026",
       "event_id": 128,
       "account_id": 9912,
-      "total_contributions": 27445.0,
+      "total_contributions": 27945.0,
       "prev_report_total": 27445.0,
-      "net_change": 0.0,
-      "last_update_date": "Aug 13, 2026"
+      "net_change": 500.0,
+      "last_update_date": "Sep 17, 2026"
     },
     "147": {
       "name": "North Alberta Strong",
@@ -127,8 +127,8 @@
       "event_id": 128,
       "account_id": 9915,
       "total_contributions": 26697.0,
-      "prev_report_total": 21697.0,
-      "net_change": 5000.0,
+      "prev_report_total": 26697.0,
+      "net_change": 0.0,
       "last_update_date": "Sep 10, 2026"
     },
     "148": {
@@ -146,10 +146,20 @@
       "registered_date": "Jun 22, 2026",
       "event_id": 128,
       "account_id": 9914,
-      "total_contributions": 7511.02,
-      "prev_report_total": 7311.02,
-      "net_change": 200.0,
-      "last_update_date": "Sep 10, 2026"
+      "total_contributions": 8886.02,
+      "prev_report_total": 7511.02,
+      "net_change": 1375.0,
+      "last_update_date": "Sep 17, 2026"
+    },
+    "153": {
+      "name": "Alberta Lawyers for Judicial Independence",
+      "registered_date": "Jul 17, 2026",
+      "event_id": 128,
+      "account_id": 9922,
+      "total_contributions": 5481.18,
+      "prev_report_total": 5132.29,
+      "net_change": 348.8900000000003,
+      "last_update_date": "Sep 17, 2026"
     },
     "154": {
       "name": "Freedom 2027",
@@ -158,16 +168,6 @@
       "account_id": 9923,
       "total_contributions": 5303.59,
       "prev_report_total": 5303.59,
-      "net_change": 0.0,
-      "last_update_date": "Sep 3, 2026"
-    },
-    "153": {
-      "name": "Alberta Lawyers for Judicial Independence",
-      "registered_date": "Jul 17, 2026",
-      "event_id": 128,
-      "account_id": 9922,
-      "total_contributions": 5132.29,
-      "prev_report_total": 5132.29,
       "net_change": 0.0,
       "last_update_date": "Sep 3, 2026"
     },
